@@ -2,27 +2,20 @@ import { useCallback, useMemo, useState } from 'react';
 import {
   applyGuess,
   createGame,
+  dailySeed,
   isValidWord,
   keyboardStatuses,
   MAX_GUESSES,
-  seedFromString,
+  todayDateKey,
   WORD_LENGTH,
   type GameState,
 } from './duotrigordle';
 
-export function useGame(initialSeed: number) {
-  const [game, setGame] = useState<GameState>(() => createGame(initialSeed));
+export function useGame() {
+  const [dateKey] = useState(todayDateKey);
+  const [game, setGame] = useState<GameState>(() => createGame(dailySeed(dateKey)));
   const [input, setInput] = useState('');
   const [error, setError] = useState<string | null>(null);
-
-  const restart = useCallback((seedInput: string) => {
-    const seed = /^-?\d+$/.test(seedInput.trim())
-      ? Number(seedInput.trim())
-      : seedFromString(seedInput.trim());
-    setGame(createGame(seed));
-    setInput('');
-    setError(null);
-  }, []);
 
   const typeLetter = useCallback((letter: string) => {
     setError(null);
@@ -54,11 +47,11 @@ export function useGame(initialSeed: number) {
 
   return {
     game,
+    dateKey,
     input,
     error,
     remainingGuesses,
     keyStatuses,
-    restart,
     typeLetter,
     backspace,
     submit,

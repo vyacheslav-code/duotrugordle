@@ -25,6 +25,14 @@ export function seedFromString(input: string): number {
   return hash;
 }
 
+export function todayDateKey(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+export function dailySeed(dateKey: string = todayDateKey()): number {
+  return seedFromString(`duotrigordle-${dateKey}`);
+}
+
 export function pickTargets(seed: number): string[] {
   const rng = mulberry32(seed);
   const pool = [...ANSWERS];

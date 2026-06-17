@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { MiniBoard } from './components/MiniBoard';
 import { Keyboard } from './components/Keyboard';
 import { useGame } from './game/useGame';
@@ -7,23 +7,18 @@ import './App.css';
 
 const WINDOW_SIZE = 5;
 
-function randomSeed() {
-  return Math.floor(Math.random() * 1_000_000_000);
-}
-
 function App() {
-  const [seedInput, setSeedInput] = useState('');
   const {
     game,
+    dateKey,
     input,
     error,
     remainingGuesses,
     keyStatuses,
-    restart,
     typeLetter,
     backspace,
     submit,
-  } = useGame(randomSeed());
+  } = useGame();
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -73,21 +68,7 @@ function App() {
           </span>
           <span>Осталось попыток: {remainingGuesses}</span>
         </div>
-        <div className="seed-controls">
-          <input
-            className="seed-input"
-            placeholder="Сид (число или слово)"
-            value={seedInput}
-            onChange={(e) => setSeedInput(e.target.value)}
-          />
-          <button
-            onClick={() => {
-              restart(seedInput || String(randomSeed()));
-            }}
-          >
-            Новая игра
-          </button>
-        </div>
+        <div className="date-label">Раздача за {dateKey}</div>
       </header>
 
       {game.gameOver && (

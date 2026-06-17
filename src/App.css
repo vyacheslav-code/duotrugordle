@@ -30,29 +30,10 @@
   color: #aaa;
 }
 
-.seed-controls {
-  display: flex;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.seed-input {
-  padding: 6px 10px;
-  border-radius: 4px;
-  border: 1px solid #565758;
-  background: #121213;
-  color: #d7dadc;
-  width: 200px;
-}
-
-.seed-controls button {
-  padding: 6px 14px;
-  border-radius: 4px;
-  border: none;
-  background: #538d4e;
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
+.date-label {
+  font-size: 13px;
+  color: #888;
+  margin-top: 2px;
 }
 
 .banner {
