@@ -1,8 +1,10 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { MiniBoard } from './components/MiniBoard';
 import { Keyboard } from './components/Keyboard';
 import { useGame } from './game/useGame';
 import { MAX_GUESSES, WORD_LENGTH } from './game/duotrigordle';
+import { useDiscordActivity } from './discord/useDiscordActivity';
+import { fetchStreak, recordResult, type StreakRecord } from './discord/streakApi';
 import './App.css';
 
 const WINDOW_SIZE = 5;
@@ -19,6 +21,21 @@ function App() {
     backspace,
     submit,
   } = useGame();
+
+  const { isDiscord, user, accessToken } = useDiscordActivity();
+  const [streak, setStreak] = useState<StreakRecord | null>(null);
+  const reportedRef = useRef(false);
+
+  useEffect(() => {
+    if (!accessToken) return;
+    fetchStreak(accessToken).then(setStreak).catch(console.error);
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (!accessToken || !game.gameOver || reportedRef.current) return;
+    reportedRef.current = true;
+    recordResult(accessToken, dateKey, game.won).then(setStreak).catch(console.error);
+  }, [accessToken, dateKey, game.gameOver, game.won]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -69,6 +86,12 @@ function App() {
           <span>Осталось попыток: {remainingGuesses}</span>
         </div>
         <div className="date-label">Раздача за {dateKey}</div>
+        {isDiscord && user && (
+          <div className="discord-status">
+            <span>{user.globalName ?? user.username}</span>
+            {streak && <span>Серия: {streak.current_streak} (макс. {streak.max_streak})</span>}
+          </div>
+        )}
       </header>
 
       {game.gameOver && (

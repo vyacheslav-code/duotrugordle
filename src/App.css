@@ -36,6 +36,14 @@
   margin-top: 2px;
 }
 
+.discord-status {
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  color: #b8e0ff;
+  margin-top: 4px;
+}
+
 .banner {
   width: 100%;
   text-align: center;
